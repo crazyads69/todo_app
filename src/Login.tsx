@@ -1,20 +1,24 @@
 import { LoginNav } from './components/LoginNav';
-import { Card, Typography, Input, Button } from '@material-tailwind/react';
+import { Card, Typography, Input, Button, Alert } from '@material-tailwind/react';
 import { useForm, FieldError } from 'react-hook-form';
 import { ValidationError } from './components/ValidationError';
-type User = {
-    email: string;
-    password: string;
-};
+import { User, signUp } from './api/supabaseAuth';
+import { useState } from 'react';
 
 export function Login() {
+    const [login, setLogin] = useState<boolean>(false);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<User>({ mode: 'onBlur', reValidateMode: 'onBlur' });
     function onSubmit(user: User) {
-        console.log('Submit detail: ', user);
+        let loggedIn = Promise.resolve(signUp(user.email, user.password));
+        loggedIn.then((value) => {
+            console.log('Login status: ', value);
+            setLogin(value);
+            localStorage.setItem('login', JSON.stringify(value));
+        });
     }
     function getEditorStyle(fieldError: FieldError | undefined) {
         return fieldError ? 'border-red-500 hover:border-red-600' : '';
