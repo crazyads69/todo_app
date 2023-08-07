@@ -48,7 +48,7 @@ export function Register() {
                 </Alert>
             )}
             <RegisterNav />
-            <div className="container flex flex-col justify-center items-center max-h-fit px-10 py-20 ">
+            <div className="container flex flex-col justify-center items-center max-h-fit px-10 py-10 ">
                 <Card
                     color="transparent"
                     className="h-1/2 w-1/2 min-h-fit rounded-lg"
