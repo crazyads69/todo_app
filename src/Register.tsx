@@ -4,12 +4,13 @@ import { useForm, FieldError } from 'react-hook-form';
 import { ValidationError } from './components/ValidationError';
 import { UserRegister, signUp } from './api/supabaseRegister';
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+import { getTheme } from './components/Theme';
 export function Register() {
     const navigate = useNavigate();
     const [signIn, setSignIn] = useState<boolean>(false);
     const [alert, setAlert] = useState<boolean>(false);
+    const [theme_custom, setTheme] = useState(getTheme());
     const {
         register,
         handleSubmit,
@@ -37,7 +38,7 @@ export function Register() {
             : '';
     }
     return (
-        <>
+        <div className="fixed flex flex-col h-full w-full ">
             {alert && (
                 <Alert
                     open={alert}
@@ -47,12 +48,12 @@ export function Register() {
                     Đăng ký thất bại
                 </Alert>
             )}
-            <RegisterNav />
-            <div className="container flex flex-col justify-center items-center max-h-fit px-10 py-10 ">
-                <Card
-                    color="transparent"
-                    className="h-1/2 w-1/2 min-h-fit rounded-lg"
-                    shadow={true}>
+            <RegisterNav theme_custom={theme_custom} setTheme={setTheme} />
+            <div
+                className={`flex flex-col justify-center items-center h-screen px-10 ${
+                    theme_custom === 'dark' ? 'bg-gray-400' : 'bg-secondary-100'
+                }`}>
+                <Card className="w-1/2 h-max rounded-lg bg-white" shadow={true}>
                     <div className="flex flex-col justify-start items-start px-5 py-5">
                         <Typography color="blue" textGradient={true} variant="h5">
                             ĐĂNG KÝ
@@ -72,6 +73,7 @@ export function Register() {
                                     className="font-bold">
                                     Nhập tên người dùng:
                                 </Typography>
+
                                 <Input
                                     type="text"
                                     size="lg"
@@ -83,6 +85,7 @@ export function Register() {
                                     className={getEditorStyle(errors.username)}
                                 />
                                 <ValidationError fieldError={errors.username} />
+
                                 <Typography
                                     color="gray"
                                     textGradient={false}
@@ -101,6 +104,7 @@ export function Register() {
                                     className={getEditorStyle(errors.fullname)}
                                 />
                                 <ValidationError fieldError={errors.fullname} />
+
                                 <Typography
                                     color="gray"
                                     textGradient={false}
@@ -150,6 +154,6 @@ export function Register() {
                     </div>
                 </Card>
             </div>
-        </>
+        </div>
     );
 }

@@ -1,21 +1,18 @@
-import { useEffect, useState } from 'react';
 import { BounceLoader } from 'react-spinners';
 import { Typography } from '@material-tailwind/react';
-export function Loading() {
-    const [loading, setLoading] = useState<boolean>(true);
-    useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 2000);
-    }, []);
-    if (!loading) {
-        return null;
-    }
+type LoadingProps = {
+    loading: boolean;
+    theme_custom: string;
+};
+export function Loading({ loading, theme_custom }: LoadingProps) {
     return (
         <>
-            <div className="flex flex-col items-center justify-center h-screen mb-6">
+            <div
+                className={`flex flex-col items-center justify-center h-screen mb-6 ${
+                    theme_custom === 'dark' ? 'bg-gray-600' : 'bg-secondary-100'
+                }`}>
                 <BounceLoader color="#B993D6" loading={loading} size={60} />
-                <Typography color="gray" textGradient={true} variant="p">
+                <Typography className="bg-pink-200" textGradient={true} variant="h6">
                     Loading ...
                 </Typography>
             </div>
