@@ -37,7 +37,7 @@ export function Login() {
             : '';
     }
     return (
-        <div className="h-full w-full">
+        <div className="fixed h-full w-full">
             {alert && (
                 <Alert
                     open={alert}

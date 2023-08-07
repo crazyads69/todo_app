@@ -30,7 +30,6 @@ export function LoginNav({ theme_custom, setTheme }: Props) {
                     </Button>
                     <Switch
                         ripple={true}
-                        label="Dark Mode"
                         defaultChecked={theme_custom === 'dark' ? true : false}
                         onClick={() => {
                             if (theme_custom === 'light') {

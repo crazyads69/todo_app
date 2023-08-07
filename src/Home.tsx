@@ -24,15 +24,14 @@ export function Home() {
     }
     return (
         <div className="w-full h-full">
-            <Navbar
-                color="light-blue"
-                className="container flex flex-row max-w-full justify-between items-center rounded-none">
-                <Link to="/">
-                    <a>TODO</a>
-                </Link>
+            <Navbar className="container flex flex-row max-w-full justify-between items-center rounded-none bg-white">
+                <Typography color="light-blue" text-gradient={true} variant="h4">
+                    <Link to="/">
+                        <a>TODO</a>
+                    </Link>
+                </Typography>
                 <Switch
                     ripple={true}
-                    label="Dark Mode"
                     defaultChecked={theme_custom === 'dark' ? true : false}
                     onClick={() => {
                         if (theme_custom === 'light') {
