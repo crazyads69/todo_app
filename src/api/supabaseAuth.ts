@@ -1,5 +1,3 @@
-import { resolve } from 'path';
-import { Login } from '../Login';
 import { supabase } from './supabaseConnect';
 export type User = {
     email: string;

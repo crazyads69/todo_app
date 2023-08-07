@@ -4,8 +4,10 @@ import { useForm, FieldError } from 'react-hook-form';
 import { ValidationError } from './components/ValidationError';
 import { User, signUp } from './api/supabaseAuth';
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 export function Login() {
+    const navigate = useNavigate();
     const [login, setLogin] = useState<boolean>(false);
     const [alert, setAlert] = useState<boolean>(false);
     const {
@@ -22,6 +24,7 @@ export function Login() {
                 setAlert(true);
             } else {
                 setAlert(false);
+                navigate('/register');
             }
             localStorage.setItem('login', JSON.stringify(value));
         });
