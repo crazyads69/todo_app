@@ -1,6 +1,7 @@
 import { supabase } from './supabaseConnect';
 
 export type Todo = {
+    id: number;
     title: string;
     content: string;
     start_date: string;
@@ -11,7 +12,7 @@ export type Todo = {
 export async function checkTodos(username: string) {
     const { data: todo, error } = await supabase
         .from('todo')
-        .select('title,content,start_date,end_date,finished')
+        .select('id,title,content,start_date,end_date,finished')
         .eq('username', username);
     if (error) {
         console.log(error);
@@ -28,7 +29,7 @@ export async function checkTodos(username: string) {
 export async function getTodos(username: string) {
     const { data: todo, error } = await supabase
         .from('todo')
-        .select('title,content,start_date,end_date,finished')
+        .select('id,title,content,start_date,end_date,finished')
         .eq('username', username);
     if (todo) {
         console.log('Get Todo Success');

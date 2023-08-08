@@ -1,17 +1,31 @@
 import { DashboardNav } from './components/DashboardNav';
 import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import { getTheme, setLightTheme, setDarkTheme } from './components/Theme';
-import { Button, Typography, Switch } from '@material-tailwind/react';
+import { Button, Typography, Switch, Alert } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 import { Loading } from './components/Loading';
 import { checkTodos, Todo, getTodos } from './api/supabaseFetch';
 import { TodoItem } from './components/TodoItem';
+import { DeleteAllTodos, DeleteTodo } from './api/supabaseDelete';
+import { AddTodo } from './components/AddTodo';
+import {
+    IconButton,
+    Dialog,
+    DialogHeader,
+    DialogBody,
+    DialogFooter,
+    Input,
+    Textarea,
+} from '@material-tailwind/react';
 export function Dashboard() {
     const [theme_custom, setTheme] = useState(getTheme());
+    const forceUpdate = useReducer(() => ({}), {})[1] as () => void;
     const [loading, setLoading] = useState(true);
-    const [todos, setTodos] = useState<Todo[] | undefined>([]);
+    const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
+    const [alertError, setAlertError] = useState<boolean>(false);
+    const [todos, setTodos] = useState<Todo[] | undefined>(undefined);
     const navigate = useNavigate();
     let username = localStorage.getItem('username') || '';
     useEffect(() => {
@@ -30,11 +44,64 @@ export function Dashboard() {
             });
         }, 1500);
     }, [navigate, username]);
+    async function deleteAllTodo() {
+        let todos = JSON.parse(localStorage.getItem('todos') || '');
+        todos = [];
+        await setTodos(todos);
+        DeleteAllTodos(username).then((res) => {
+            if (res === false) {
+                console.log('Error');
+                setAlertError(true);
+            } else {
+                setAlertSuccess(true);
+                console.log('Deleted');
+            }
+        });
+        await localStorage.setItem('todos', JSON.stringify(todos));
+    }
+    function handleDeleteTodo(id: number) {
+        let todos = JSON.parse(localStorage.getItem('todos') || '');
+        todos = todos.filter((todo: Todo) => todo.id !== id);
+        console.log(todos);
+        DeleteTodo(id).then((res) => {
+            if (res === false) {
+                console.log('Error');
+                forceUpdate();
+                setAlertError(true);
+                //let error = 'Database error';
+                //navigate(`/error/${error}`);
+            } else {
+                setTodos(todos);
+                localStorage.setItem('todos', JSON.stringify(todos));
+                forceUpdate();
+                setAlertSuccess(true);
+                console.log('Deleted');
+            }
+        });
+    }
     if (loading) {
         return <Loading loading={loading} theme_custom={theme_custom} />;
     }
     return (
         <div className="flex flex-col w-full h-screen">
+            <Alert
+                color="green"
+                open={alertSuccess}
+                onClose={() => {
+                    setAlertSuccess(!alertSuccess);
+                    forceUpdate();
+                }}>
+                Xoá todo thành công
+            </Alert>
+            <Alert
+                color="red"
+                open={alertError}
+                onClose={() => {
+                    setAlertSuccess(!alertError);
+                    forceUpdate();
+                }}>
+                Xoá todo bị lỗi
+            </Alert>
             <DashboardNav theme_custom={theme_custom} setTheme={setTheme} />
             <div
                 className={`flex flex-col h-full ${
@@ -45,35 +112,43 @@ export function Dashboard() {
                         color="green"
                         variant="gradient"
                         size="lg"
-                        className="w-1/5 rounded-full">
+                        className="w-1/5 rounded-full"
+                        onClick={() => {}}>
                         + Thêm
                     </Button>
-                    <Button color="red" variant="gradient" size="lg" className="w-1/5 rounded-full">
+                    <Button
+                        color="red"
+                        variant="gradient"
+                        size="lg"
+                        className="w-1/5 rounded-full"
+                        onClick={deleteAllTodo}>
                         - Xoá
                     </Button>
+                    <AddTodo />
                 </div>
                 <div className="flex flex-row justify-center items-center mt-6 gap-6">
-                    {JSON.parse(localStorage.getItem('todos') || '') === '' ? (
-                        <div className="flex flex-col w-full h-screen ">
+                    {!todos?.length ? (
+                        <div className="flex flex-col items-center w-full h-screen ">
                             <Typography color="light-blue" textGradient={true} variant="h2">
-                                Bạn chưa có todo nào
+                                Bạn chưa có todo nào :)
                             </Typography>
                         </div>
                     ) : (
                         <div className="flex flex-col w-full items-center justify-between py-5 h-max">
-                            {JSON.parse(localStorage.getItem('todos') || '').map(
-                                (todo: Todo, index: number) => (
+                            {JSON.parse(localStorage.getItem('todos') || '').map((todo: Todo) => (
+                                <div className="flex flex-row w-full items-center justify-between gap-4 mt-6 mb-6">
                                     <TodoItem
-                                        key={index}
+                                        key={todo.id}
+                                        id={todo.id}
                                         title={todo.title}
                                         content={todo.content}
                                         finished={todo.finished}
                                         start_date={todo.start_date}
                                         end_date={todo.end_date}
-                                        setTodos={setTodos}
+                                        setTodos={() => handleDeleteTodo(todo.id)}
                                     />
-                                ),
-                            )}
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
