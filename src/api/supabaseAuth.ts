@@ -7,7 +7,7 @@ export type User = {
 export async function signUp(email: string, password: string) {
     const { data: user, error } = await supabase
         .from('user')
-        .select('email,password')
+        .select('email,password,username')
         .eq('email', email);
     if (error) {
         console.log(error);
@@ -15,6 +15,7 @@ export async function signUp(email: string, password: string) {
     } else if (user) {
         if (user[0].email === email && user[0].password === password) {
             console.log('Login Success');
+            localStorage.setItem('username', user[0].username);
             return true;
         } else {
             console.log('Login Failed');

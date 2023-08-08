@@ -26,7 +26,7 @@ export function Login() {
                 setAlert(true);
             } else {
                 setAlert(false);
-                navigate('/register');
+                navigate('/dashboard');
             }
             localStorage.setItem('login', JSON.stringify(value));
         });
