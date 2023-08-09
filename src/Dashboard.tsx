@@ -21,6 +21,7 @@ import {
 } from '@material-tailwind/react';
 export function Dashboard() {
     const [theme_custom, setTheme] = useState(getTheme());
+    const [open, setOpen] = useState(false);
     const forceUpdate = useReducer(() => ({}), {})[1] as () => void;
     const [loading, setLoading] = useState(true);
     const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
@@ -79,6 +80,9 @@ export function Dashboard() {
             }
         });
     }
+    function handleOpen() {
+        setOpen(!open);
+    }
     if (loading) {
         return <Loading loading={loading} theme_custom={theme_custom} />;
     }
@@ -113,7 +117,7 @@ export function Dashboard() {
                         variant="gradient"
                         size="lg"
                         className="w-1/5 rounded-full"
-                        onClick={() => {}}>
+                        onClick={handleOpen}>
                         + Thêm
                     </Button>
                     <Button
@@ -124,7 +128,7 @@ export function Dashboard() {
                         onClick={deleteAllTodo}>
                         - Xoá
                     </Button>
-                    <AddTodo />
+                    <AddTodo open={open} handler={handleOpen} />
                 </div>
                 <div className="flex flex-row justify-center items-center mt-6 gap-6">
                     {!todos?.length ? (
