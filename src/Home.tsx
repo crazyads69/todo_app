@@ -19,6 +19,9 @@ export function Home() {
     function handleRegister() {
         navigate('/register');
     }
+    if (sessionStorage.getItem('login') === 'true') {
+        navigate('/dashboard');
+    }
     if (loading) {
         return <Loading loading={loading} theme_custom={theme_custom} />;
     }
@@ -26,7 +29,11 @@ export function Home() {
         <div className="w-full h-full">
             <Navbar className="container flex flex-row max-w-full justify-between items-center rounded-none bg-white">
                 <Typography color="light-blue" text-gradient={true} variant="h4">
-                    <Link to="/">
+                    <Link
+                        to="/"
+                        onClick={() => {
+                            sessionStorage.clear();
+                        }}>
                         <a>TODO</a>
                     </Link>
                 </Typography>

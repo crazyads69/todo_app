@@ -11,7 +11,8 @@ import { useForm } from 'react-hook-form';
 import { ValidationError } from './ValidationError';
 import { insertTodo } from '../api/supabaseInsert';
 
-export type TodoNew = {
+export type TodoExist = {
+    id: number;
     title: string;
     content: string;
     start_date: string;
@@ -19,32 +20,32 @@ export type TodoNew = {
     finished: boolean;
 };
 
-export type AddTodoProps = {
+export type EditTodoProps = {
     open: boolean;
     handler: () => void;
     setTodos: (todos: any) => void;
 };
 
-export function AddTodo({ open, handler, setTodos }: AddTodoProps) {
+export function AddTodo({ open, handler, setTodos }: EditTodoProps) {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<TodoNew>({ mode: 'onBlur', reValidateMode: 'onBlur' });
+    } = useForm<TodoExist>({ mode: 'onBlur', reValidateMode: 'onBlur' });
 
     function convertDate(date: string) {
         let d = new Date(date);
         let day = d.getDate();
         let month = d.getMonth() + 1;
         let year = d.getFullYear();
-        return `${year}-${month}-${day}`;
+        return `${day}-${month}-${year}`;
     }
-    function onSubmit(todo: TodoNew) {
+    function onSubmit(todo: TodoExist) {
         let start_date = convertDate(todo.start_date);
         let end_date = convertDate(todo.end_date);
         let username = localStorage.getItem('username') || '';
         let todos = JSON.parse(sessionStorage.getItem('todos') || '');
-        let newTodo = {
+        let editTodo = {
             username: username,
             title: todo.title,
             content: todo.content,
@@ -52,9 +53,9 @@ export function AddTodo({ open, handler, setTodos }: AddTodoProps) {
             end_date: end_date,
             finished: false,
         };
-        todos.push(newTodo);
-        console.log(newTodo);
-        insertTodo(newTodo);
+        todos.push(editTodo);
+        console.log(editTodo);
+        insertTodo(editTodo);
         sessionStorage.setItem('todos', JSON.stringify(todos));
         setTodos(todos);
         handler();

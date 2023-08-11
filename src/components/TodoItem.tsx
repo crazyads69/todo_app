@@ -1,18 +1,4 @@
-import {
-    Tooltip,
-    Chip,
-    Card,
-    Checkbox,
-    Typography,
-    IconButton,
-    Alert,
-} from '@material-tailwind/react';
-import { Todo } from '../api/supabaseFetch';
-import { DeleteTodo, DeleteAllTodos } from '../api/supabaseDelete';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { set } from 'react-hook-form';
-
+import { Tooltip, Card, Typography, IconButton } from '@material-tailwind/react';
 type Props = {
     id: number;
     title: string;
@@ -24,20 +10,26 @@ type Props = {
 };
 
 export function TodoItem({ title, content, start_date, end_date, finished, id, setTodos }: Props) {
-    const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
-    const [alertError, setAlertError] = useState<boolean>(false);
-
     return (
         <>
-            <Alert color="green" open={alertSuccess} onClose={() => setAlertSuccess(!alertSuccess)}>
-                Xoá 1 todo thành công
-            </Alert>
-            <Alert color="red" open={alertError} onClose={() => setAlertError(!alertError)}>
-                Xoá 1 todo bị lỗi
-            </Alert>
             <div className="flex flex-row w-full h-full items-center justify-between gap-4 mt-6 mb-6">
                 <Tooltip content={content}>
-                    <Card className="flex flex-row w-full max-h-full items-center justify-between">
+                    <Card className="flex flex-row w-full max-h-full items-center justify-between bg-gray-300">
+                        <IconButton onClick={() => {}}>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                className="w-6 h-6">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                                />
+                            </svg>
+                        </IconButton>
                         <Typography color="light-blue" textGradient={true} variant="h6">
                             {title}
                         </Typography>
@@ -46,6 +38,9 @@ export function TodoItem({ title, content, start_date, end_date, finished, id, s
                         </Typography>
                         <Typography color="light-blue" textGradient={true} variant="h6">
                             {end_date}
+                        </Typography>
+                        <Typography color="light-blue" textGradient={true} variant="h6">
+                            {finished ? 'Đã hoàn thành' : 'Chưa hoàn thành'}
                         </Typography>
                         <IconButton onClick={setTodos}>
                             <svg

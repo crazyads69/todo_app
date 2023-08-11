@@ -25,10 +25,12 @@ export function Login() {
             if (value === false) {
                 setAlert(true);
             } else {
+                sessionStorage.setItem('email', user.email);
+                sessionStorage.setItem('password', user.password);
                 setAlert(false);
                 navigate('/dashboard');
             }
-            localStorage.setItem('login', JSON.stringify(value));
+            sessionStorage.setItem('login', JSON.stringify(value));
         });
     }
     function getEditorStyle(fieldError: FieldError | undefined) {
@@ -38,22 +40,16 @@ export function Login() {
     }
     return (
         <div className="fixed h-full w-full">
-            {alert && (
-                <Alert
-                    open={alert}
-                    onClose={() => setAlert(!alert)}
-                    color="red"
-                    className="w-96 mt-10">
-                    Đăng nhập thất bại
-                </Alert>
-            )}
+            <Alert open={alert} onClose={() => setAlert(!alert)} color="red">
+                Đăng nhập thất bại
+            </Alert>
             <LoginNav theme_custom={theme_custom} setTheme={setTheme} />
             <div
                 className={`flex flex-col h-screen w-full ${
                     theme_custom === 'dark' ? 'bg-gray-400' : 'bg-secondary-100'
                 }`}>
                 <div className="flex flex-col justify-center items-center px-10 py-20">
-                    <Card className="h-1/2 w-1/2 h-max rounded-lg bg-white" shadow={true}>
+                    <Card className="h-max w-1/2 rounded-lg bg-white" shadow={true}>
                         <div className="flex flex-col justify-start items-start px-5 py-5">
                             <Typography color="blue" textGradient={true} variant="h5">
                                 ĐĂNG NHẬP
